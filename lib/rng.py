@@ -14,9 +14,9 @@ def seed(n = 1):
     print(f'[INFO] RNG is seeded to {n}!')
 
     # test it
-    rnd_python = random.random()
-    rnd_numpy  = np.random.rand(1)[0]
-    rnd_torch  = torch.rand(1).detach().item()
+    # rnd_python = random.random()
+    # rnd_numpy  = np.random.rand(1)[0]
+    # rnd_torch  = torch.rand(1).detach().item()
     # try:
     #     assert rnd_python == 0.13436424411240122
     #     assert rnd_numpy  == 0.417022004702574
