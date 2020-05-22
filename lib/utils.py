@@ -1,8 +1,17 @@
+from typing import List
 
 def chunks(lst:list, n:int):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
+
+
+def split_by_index(arr, indexes:List[int]):
+    assert max(indexes) < len(arr)
+    start = 0
+    for i in indexes:
+        yield arr[start:i+1]
+        start = i+1
 
 
 class AttrDict(dict):
