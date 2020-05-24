@@ -15,6 +15,8 @@ class Playground {
 
     constructor() {
         this.state = []
+        this.values = []
+        this.policy = []
         this.rows = 0
         this.cols = 0
 
@@ -26,7 +28,13 @@ class Playground {
                 this.rows = this.state.length
                 this.cols = this.state[0].length
             }
-            await playground.update(data.values, data.policy)
+            if (data.values){
+                this.values = data.values
+            }
+            if (data.policy){
+                this.policy = data.policy
+            }
+            await playground.update()
         }
         this.server.onopen = async (e) => {
             await this.reset()
@@ -45,10 +53,6 @@ class Playground {
         }
     }
 
-    async evaluate(){
-        this.message('evaluate')
-    }
-
     async reset(){
         this.message('reset')
     }
@@ -62,7 +66,9 @@ class Playground {
         return [red, green, blue, alpha]
     }
 
-    update(values, policy) {
+    update() {
+        let values = this.values
+        let policy = this.policy
         let [min, max] = this._minMax(values)
         let ARROWS = '↑↓←→'
 
@@ -118,9 +124,11 @@ playground = new Playground()
 
 let dom = {
     world: [],
-    btnEvaluate: document.getElementById('btnEvaluate'),
     btnReset: document.getElementById('btnReset'),
-    btnPlay: document.getElementById('btnPlay'),
+    btnPolicyEvaluate: document.getElementById('btnPolicyEvaluate'),
+    btnPolicyUpdate: document.getElementById('btnPolicyUpdate'),
+    btnPolicyIteration: document.getElementById('btnPolicyIteration'),
+    btnPolicyIteration100: document.getElementById('btnPolicyIteration100'),
     showValues: document.getElementById('showValues'),
     showPolicy: document.getElementById('showPolicy'),
     showColors: document.getElementById('showColors'),
@@ -131,10 +139,12 @@ for (let m=0; m<rows; m++){
     dom.world.push([...document.querySelectorAll(`[id^="${m},"]`)])
 }
 
-dom.btnEvaluate.addEventListener('click', () => playground.evaluate())
 dom.btnReset.addEventListener('click', () => playground.reset())
-dom.btnPlay.addEventListener('click', async () => {
-    for (let n=0; n<100;n++) await playground.evaluate()
+dom.btnPolicyEvaluate.addEventListener('click', () => playground.message('policy_evaluate'))
+dom.btnPolicyUpdate.addEventListener('click', () => playground.message('policy_update'))
+dom.btnPolicyIteration.addEventListener('click', () => playground.message('policy_iteration'))
+dom.btnPolicyIteration100.addEventListener('click', async () => {
+    for (let n=0; n<100;n++) await playground.message('policy_iteration')
 })
 
 dom.showValues.addEventListener('click', () => document.querySelector('.world').classList.toggle('show_values'))

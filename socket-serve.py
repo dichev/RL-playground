@@ -34,8 +34,16 @@ class SocketServer():
             return { 'values': values.tolist(), 'policy': policy.tolist(), 'state': state.tolist() }
             pass
 
-        elif message == 'evaluate':
-            values, policy = self.playground.evaluate(render=False)
+        elif message == 'policy_evaluate':
+            values = self.playground.policy_evaluate()
+            return { 'values': values.tolist() }
+
+        elif message == 'policy_update':
+            policy = self.playground.policy_update()
+            return { 'policy': policy.tolist() }
+
+        elif message == 'policy_iteration':
+            values, policy = self.playground.policy_iteration()
             return { 'values': values.tolist(), 'policy': policy.tolist() }
 
         elif message == 'sample':

@@ -20,35 +20,35 @@ class Playground:
 
     def sample(self, pos):
         self.values[pos] = self._calc_value(pos)
-        self.update_policy()
+        self.policy_update()
         return self.values, self.policy_probs
 
-    def evaluate(self, render=True):
+    def policy_evaluate(self):
         V = np.zeros_like(self.values)
         # V = self.values
         for pos in self._explorable_states():
             V[pos] = self._calc_value(pos)
 
         self.values = V
-        self.update_policy()
+        return self.values
 
-        if render: self.render()
-        return self.values, self.policy_probs
-
-    def evaluate_times(self, N, render=True):
-        for k in range(1, N+1):
-            if render: print(f'k = {k}')
-            self.evaluate(render=render)
-        return self.values, self.policy_probs
-
-
-    def update_policy(self):
+    def policy_update(self):
         for pos in self._explorable_states():
             if self.env.is_terminal(pos):
                 self.policy_probs[pos] = [0,0,0,0]
             else:
                 Q = self._get_q_values(pos)
                 self.policy_probs[pos] = self._greedy_policy(Q)
+        return self.policy_probs
+
+    def policy_iteration(self, k=1, render=False):
+        for n in range(k):
+            self.policy_evaluate()
+            self.policy_update()
+            if render:
+                print(f'k = {n + 1}')
+                self.render()
+        return self.values, self.policy_probs
 
 
     def _calc_value(self, pos):
@@ -96,6 +96,4 @@ class Playground:
 if __name__ == "__main__":
     playground = Playground()
     playground.env.render()
-    playground.evaluate_times(3)
-    print('one more..')
-    playground.evaluate()
+    playground.policy_iteration(3, render=True)
