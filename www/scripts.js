@@ -85,7 +85,7 @@ class Playground {
         for (let m=0; m<this.rows; m++){ // todo: a bit handlebars?
             for (let n=0; n<this.cols; n++){
                 let value = values[m][n]
-                let color = value ? this.colors(this._normalize(value, min, max)) : [0, 0, 0, 0]
+                let color = this.colors(this._normalize(value, min, max))
 
                 let arrows = ''
                 for (let a = 0; a < policy[m][n].length; a++) {
@@ -94,7 +94,7 @@ class Playground {
                     }
                 }
 
-                dom.world[m][n].querySelector('.value').innerText = value.toFixed(5) + '..'
+                dom.world[m][n].querySelector('.value').innerText = value.toFixed(4) + '..'
                 dom.world[m][n].querySelector('.color').style.backgroundColor = `rgba(${color.join(',')})`
                 dom.world[m][n].querySelector('.policy').innerText = arrows
                 dom.world[m][n].className = dictClasses[this.state[m][n]]
@@ -103,7 +103,7 @@ class Playground {
     }
 
     _isTerminal(m, n){
-        return this.state[m][n] === Z || this.state[m][n] === G
+        return this.state[m][n] === G // this.state[m][n] === Z ||
     }
     _isWall(m, n){
         return this.state[m][n] === W

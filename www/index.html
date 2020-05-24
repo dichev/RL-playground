@@ -117,7 +117,11 @@
         <p>Dynamic programming:</p>
         <div>
             <input type="radio" id="huey" name="drone" value="huey" checked />
-            <label for="huey">Static backup (update values of all states together using cache of previous values)</label>
+            <label for="huey">Synchronous backup (update values of all states together using cache of previous values)</label>
+        </div>
+        <div>
+            <input type="radio" id="dewey" name="drone" value="dewey" />
+            <label for="dewey">In-place backup (update values of all states one by one in any order)</label>
         </div>
         <div>
             <input type="radio" id="dewey" name="drone" value="dewey" />
@@ -127,9 +131,9 @@
             <input type="radio" id="louie" name="drone" value="louie" />
             <label for="louie">Random update (update random value)</label>
         </div>
-        <button type="button">Policy evaluation</button>
-        <button type="button">Policy iteration</button>
         <button type="button">Value iteration</button>
+        <button type="button">Policy iteration</button>
+        <button type="button">Policy evaluation</button>
 
         <button type="button" id="btnReset">Reset</button>
         <button type="button" id="btnEvaluate">Evaluate</button>
