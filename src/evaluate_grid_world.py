@@ -25,7 +25,7 @@ class Playground:
 
     def evaluate(self, render=True):
         V = np.zeros_like(self.values)
-        # V = values
+        # V = self.values
         for pos in self._explorable_states():
             V[pos] = self._calc_value(pos)
 
@@ -52,7 +52,7 @@ class Playground:
 
 
     def _calc_value(self, pos):
-        assert self.env.is_explorable(pos), f'Trying to calc value of terminal state: {pos}'
+        assert self.env.is_explorable(pos), f'Trying to calc value of wall: {pos}'
 
         R = self.env.get_reward(pos)
         v = R + GAMMA * np.sum(self.policy_probs[pos] * self._get_q_values(pos)) # cfg.greedy_policy

@@ -58,7 +58,9 @@ class Playground {
     }
 
     async sample(row, col){
-        this.message('sample', { position: [row, col]})
+        if (!this._isWall(row, col)) {
+            this.message('sample', {position: [row, col]})
+        }
     }
 
     async evaluate(){
