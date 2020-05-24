@@ -1,0 +1,114 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+body {
+    background: black;
+    color: white;
+    font-family: Verdana, serif;
+    font-size: 12px;
+}
+
+.world td {
+    width: 100px;
+    height: 100px;
+    position: relative;
+}
+.world .color, .world .value, .world .policy {
+    left: 0;
+    top: 0;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    display: inline-block;
+}
+
+.world {
+    user-select: none;
+}
+
+.world .color, .world .value, .world .policy {
+    display: none;
+}
+
+.world.show_colors .color, .world.show_values .value, .world.show_policy .policy {
+    display: inline-block;
+}
+
+
+.world td {
+    width: 100px;
+    height: 100px;
+    background-color: #404040;
+    text-align: center;
+    overflow: hidden;
+    display: inline-block;
+    margin: 1px;
+    position: relative;
+}
+.world td:hover {
+    opacity: 0.9;
+}
+
+.world .wall {
+    background-color: #2d2d2d;
+}
+
+.world .goal {
+    background-color: #c3c300;
+}
+
+.world .trap {
+    background-color: #582387;
+}
+.world .wall .color, .world .wall .policy,
+.world .goal .color, .world .goal .policy,
+.world .trap .color, .world .trap .policy {
+    display: none !important;
+}
+
+.world .value {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.45);
+    background-color: rgba(0,0,0,0);
+    /*white-space: nowrap;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+}
+
+.world .policy {
+    font-size: 29px;
+    color: #a7a7a7;
+    line-height: 3.2em;
+}
+
+.policy {
+    left: 0;
+    top: 0;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    display: inline-block;
+    z-index: 100;
+    font-size: 20px;
+}
+.policy .left {
+    left: 25px;
+    top: 25px;
+    position: absolute;
+}
+.policy .right {
+    left: 65px;
+    top: 25px;
+    position: absolute;
+}
+.policy .up {
+    left: 50px;
+    top: 0px;
+    position: absolute;
+}
+.policy .down {
+    left: 50px;
+    bottom: 25px;
+    position: absolute;
+}
