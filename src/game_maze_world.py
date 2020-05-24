@@ -17,14 +17,14 @@ class MazeWorld:
 
     def __init__(self):
         self.state = np.array([
-            [W, W, W, W, W, W, W, 0, 0, 0, W, W, 0, 0, G],
+            [W, W, W, W, W, W, W, 0, 0, 0, W, W, G, 0, 0],
             [0, 0, 0, 0, 0, 0, W, 0, W, 0, W, W, 0, 0, 0],
             [W, W, W, W, W, 0, W, W, W, 0, W, W, 0, 0, 0],
             [G, 0, 0, 0, W, 0, 0, 0, 0, 0, W, W, 0, 0, 0],
             [W, W, W, 0, W, 0, W, W, W, 0, W, W, 0, 0, 0],
             [0, 0, 0, 0, W, 0, W, Z, W, 0, W, W, 0, 0, 0],
             [0, W, W, W, W, 0, W, 0, 0, 0, W, W, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, W, W, W, W, W, W, Z, 0, 0],
+            [0, 0, 0, 0, 0, 0, W, W, W, W, W, W, 0, 0, G],
         ])
         self.rows, self.cols = self.state.shape
         self.actions = Actions

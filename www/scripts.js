@@ -11,24 +11,6 @@ let dictClasses = {
     3: 'trap'
 }
 
-
-
-let dom = {
-    world: [],
-    btnEvaluate: document.getElementById('btnEvaluate'),
-    btnReset: document.getElementById('btnReset'),
-    btnPlay: document.getElementById('btnPlay'),
-    showValues: document.getElementById('showValues'),
-    showPolicy: document.getElementById('showPolicy'),
-    showColors: document.getElementById('showColors'),
-}
-
-rows = document.querySelectorAll('tr').length // tmp
-for (let m=0; m<rows; m++){
-    dom.world.push([...document.querySelectorAll(`[id^="${m},"]`)])
-}
-
-
 class Playground {
 
     constructor() {
@@ -132,6 +114,23 @@ class Playground {
 }
 
 playground = new Playground()
+
+
+let dom = {
+    world: [],
+    btnEvaluate: document.getElementById('btnEvaluate'),
+    btnReset: document.getElementById('btnReset'),
+    btnPlay: document.getElementById('btnPlay'),
+    showValues: document.getElementById('showValues'),
+    showPolicy: document.getElementById('showPolicy'),
+    showColors: document.getElementById('showColors'),
+}
+
+rows = document.querySelectorAll('tr').length // tmp
+for (let m=0; m<rows; m++){
+    dom.world.push([...document.querySelectorAll(`[id^="${m},"]`)])
+}
+
 dom.btnEvaluate.addEventListener('click', () => playground.evaluate())
 dom.btnReset.addEventListener('click', () => playground.reset())
 dom.btnPlay.addEventListener('click', async () => {

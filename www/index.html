@@ -154,23 +154,7 @@
     </table>
 
     <div>
-        <p>Dynamic programming:</p>
-        <div>
-            <input type="radio" id="huey" name="drone" value="huey" checked />
-            <label for="huey">Synchronous backup (update values of all states together using cache of previous values)</label>
-        </div>
-        <div>
-            <input type="radio" id="dewey" name="drone" value="dewey" />
-            <label for="dewey">In-place backup (update values of all states one by one in any order)</label>
-        </div>
-        <div>
-            <input type="radio" id="dewey" name="drone" value="dewey" />
-            <label for="dewey">Asynchronous backup (update values of all states one by one in any order)</label>
-        </div>
-        <div>
-            <input type="radio" id="louie" name="drone" value="louie" />
-            <label for="louie">Random update (update random value)</label>
-        </div>
+        <p>Actions:</p>
         <button type="button">Value iteration</button>
         <button type="button">Policy iteration</button>
         <button type="button">Policy evaluation</button>
@@ -181,6 +165,39 @@
     </div>
 
     <div>
+        <p>Dynamic programming:</p>
+        <div>
+            <input type="radio" id="a" name="drone" value="a" checked />
+            <label for="a">Synchronous backup (update values of all states together using cache of previous values)</label>
+        </div>
+        <div>
+            <input type="radio" id="b" name="drone" value="b" />
+            <label for="b">In-place backup (update values of all states one by one in any order)</label>
+        </div>
+        <div>
+            <input type="radio" id="c" name="drone" value="c" />
+            <label for="c">Asynchronous backup (update values of all states one by one in any order)</label>
+        </div>
+        <div>
+            <input type="radio" id="d" name="drone" value="d" />
+            <label for="d">Random update (update random value)</label>
+        </div>
+    </div>
+
+    <div>
+        <p>Policy:</p>
+        <div>
+            <input type="radio" id="e" name="f" value="huey"  />
+            <label for="e">Uniform random policy</label>
+        </div>
+        <div>
+            <input type="radio" id="f" name="f" value="f" checked />
+            <label for="f">Greedy policy</label>
+        </div>
+    </div>
+
+    <div>
+        <p>Display:</p>
         <div>
             <input type="checkbox" id="showValues" checked />
             <label for="showValues">Show values</label>
