@@ -84,9 +84,9 @@ class Playground:
         if self.env.is_terminal(pos):
             v = R
         elif using_policy:
-            v = R + GAMMA * np.sum(self.policy_probs[pos] * next_values)
+            v = np.sum( self.policy_probs[pos] * (R + GAMMA * next_values))
         else: # value iteration
-            v = max(R + GAMMA * next_values)
+            v = np.max(R + GAMMA * next_values)
         return v
 
     # def calc_q(self, pos, action):
@@ -104,8 +104,8 @@ class Playground:
 
     def _greedy_policy(self, Q):
         max_v = max(Q)
-        count = sum([1 for q in Q if q == max_v])
-        probs = [1 / count if q == max_v else 0 for q in Q]
+        max_n = sum([1 for q in Q if q == max_v])
+        probs = [1 / max_n if q == max_v else 0. for q in Q]
         return probs
 
     def _explorable_states(self):
