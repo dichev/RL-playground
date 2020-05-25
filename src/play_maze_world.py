@@ -47,14 +47,11 @@ class Playground:
 
     def policy_update(self):
         for pos in self._explorable_states():
-            if self.env.is_terminal(pos):
-                self.policy_probs[pos] = [0,0,0,0]
+            if self.cfg.greedy_policy:
+                Q = self._get_q_values(pos)
+                self.policy_probs[pos] = self._greedy_policy(Q)
             else:
-                if self.cfg.greedy_policy:
-                    Q = self._get_q_values(pos)
-                    self.policy_probs[pos] = self._greedy_policy(Q)
-                else:
-                    self.policy_probs[pos] = [0.25,0.25,0.25,0.25]
+                self.policy_probs[pos] = [0.25,0.25,0.25,0.25]
         return self.policy_probs
 
     def policy_iteration(self, k=1, render=False):
@@ -78,12 +75,10 @@ class Playground:
         assert self.env.is_explorable(pos), f'Trying to calc value of wall: {pos}'
 
         GAMMA = self.cfg.gamma
-        R = self.env.get_reward(pos)
+        R = [self.env.get_reward(pos, action) for action in range(self.env.num_actions)]
         next_values = self._get_q_values(pos)
 
-        if self.env.is_terminal(pos):
-            v = R
-        elif using_policy:
+        if using_policy:
             v = np.sum( self.policy_probs[pos] * (R + GAMMA * next_values))
         else: # value iteration
             v = np.max(R + GAMMA * next_values)
@@ -98,6 +93,9 @@ class Playground:
     #     return q
 
     def _get_q_values(self, pos):
+        if self.env.is_terminal(pos):
+            return np.zeros(self.env.num_actions)
+
         next_positions = self.env.get_next_positions_all(pos)
         next_values = [self.values[next_pos] for next_pos in next_positions]
         return np.array(next_values)

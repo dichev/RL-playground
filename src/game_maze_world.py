@@ -20,8 +20,8 @@ class MazeWorld:
             [W, W, W, W, W, W, W, 0, 0, 0, W, W, G, 0, 0],
             [0, 0, 0, 0, 0, 0, W, 0, W, 0, W, W, 0, 0, 0],
             [W, W, W, W, W, 0, W, W, W, 0, W, W, 0, 0, 0],
-            [G, 0, 0, 0, W, 0, 0, 0, 0, 0, W, W, 0, 0, 0],
-            [W, W, W, 0, W, 0, W, W, W, 0, W, W, 0, 0, 0],
+            [G, 0, 0, 0, W, 0, 0, 0, 0, 0, W, W, 0, Z, 0],
+            [W, W, W, 0, W, 0, W, W, W, 0, W, W, 0, Z, 0],
             [0, 0, 0, 0, W, 0, W, Z, W, 0, W, W, 0, 0, 0],
             [0, W, W, W, W, 0, W, 0, 0, 0, W, W, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, W, W, W, W, W, W, 0, 0, G],
@@ -33,18 +33,16 @@ class MazeWorld:
     def reset(self):
         return self.state
 
-    def get_reward(self, position):
-        m, n = position
-        if   m < 0: m = 0
-        elif m > self.rows-1: m = self.rows-1
-        if   n < 0: n = 0
-        elif n > self.cols-1: n = self.cols-1
+    def get_reward(self, pos, action):
+        # next_pos = self.get_next_position(pos, action)
+        # s = self.state[next_pos] # not the reward of the next state, but of the transition from the current state
 
-        s = self.state[m, n]
-        if   s == 0: return -1
-        elif s == G: return 10
-        elif s == Z: return -10
-        elif s == W: raise Exception('How u go inside the Wall?')
+        block = self.state[pos]
+
+        if   block == 0: return -1
+        elif block == G: return +10 # todo: why become 0 in policy iter
+        elif block == Z: return -10 # todo: why is not -10 in value iteration
+        elif block == W: raise Exception('How u go inside the Wall?')
         else:        raise Exception('check me')
 
 
@@ -62,7 +60,7 @@ class MazeWorld:
         return np.clip(m, 0, self.rows-1), np.clip(n, 0, self.cols-1)
 
     def is_terminal(self, pos):
-        return self.state[pos] == G
+        return self.state[pos] == G #or self.state[pos] == Z
 
     def is_explorable(self, pos):
         return self.state[pos] != W

@@ -105,10 +105,11 @@ class Playground {
         dom.btnPolicyEvaluate.disabled = !using_policy
         dom.btnPolicyIteration.disabled = !using_policy
         dom.btnValueIteration.disabled = using_policy
+        dom.showPolicy.disabled = !using_policy
+
         if(dom.showPolicy.checked !== using_policy){
             dom.showPolicy.click()
         }
-        dom.showPolicy.disabled = !using_policy
     }
 
     _isTerminal(m, n){
