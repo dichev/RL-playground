@@ -21,6 +21,7 @@ class Playground:
         self.rows, self.cols = states_all.shape
         self.values = np.zeros((self.rows, self.cols))
         self.policy_probs = np.full((self.rows, self.cols, 4), 0.25)
+        self.explorable_states = self.env.get_explorable_states()
 
         return self.values, self.policy_probs, states_all
 
@@ -39,14 +40,17 @@ class Playground:
     def policy_evaluate(self):
         V = np.zeros_like(self.values)
         # V = self.values
-        for pos in self._explorable_states():
-            V[pos] = self._calc_value(pos, using_policy=True)
+        for pos in self.explorable_states:
+            R = self._get_actions_rewards(pos)
+            Q = self._get_q_values(pos)
+            GAMMA = self.cfg.gamma
+            V[pos] = np.sum(self.policy_probs[pos] * (R + GAMMA * Q))
 
         self.values = V
         return self.values
 
     def policy_update(self):
-        for pos in self._explorable_states():
+        for pos in self.explorable_states:
             if self.cfg.greedy_policy:
                 Q = self._get_q_values(pos)
                 self.policy_probs[pos] = self._greedy_policy(Q)
@@ -66,10 +70,17 @@ class Playground:
     def value_iteration(self, k=1):
         for n in range(k):
             V = np.zeros_like(self.values)
-            for pos in self._explorable_states():
-                V[pos] = self._calc_value(pos, using_policy=False)
+            for pos in self.explorable_states:
+                R = self._get_actions_rewards(pos)
+                Q = self._get_q_values(pos)
+                GAMMA = self.cfg.gamma
+                V[pos] = np.max(R + GAMMA * Q)
             self.values = V
         return self.values
+
+    def _get_actions_rewards(self, pos):
+        R = [self.env.get_reward(pos, action) for action in range(self.env.num_actions)]
+        return R
 
     def _calc_value(self, pos, using_policy = True):
         assert self.env.is_explorable(pos), f'Trying to calc value of wall: {pos}'
@@ -106,11 +117,6 @@ class Playground:
         probs = [1 / max_n if q == max_v else 0. for q in Q]
         return probs
 
-    def _explorable_states(self):
-        for m in range(self.rows):
-            for n in range(self.cols):
-                if self.env.is_explorable((m,n)):
-                    yield m,n
 
     def render(self):
         env, values, rows, cols = self.env, self.values, self.rows, self.cols

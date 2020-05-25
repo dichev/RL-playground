@@ -33,6 +33,7 @@ class MazeWorld:
     def reset(self):
         return self.state
 
+
     def get_reward(self, pos, action):
         # next_pos = self.get_next_position(pos, action)
         # s = self.state[next_pos] # not the reward of the next state, but of the transition from the current state
@@ -64,6 +65,14 @@ class MazeWorld:
 
     def is_explorable(self, pos):
         return self.state[pos] != W
+
+    def get_explorable_states(self):
+        explorable_states = []
+        for m in range(self.rows):
+            for n in range(self.cols):
+                if self.is_explorable((m, n)):
+                    explorable_states.append((m, n))
+        return explorable_states
 
     def get_next_position(self, pos, action):
         m, n = pos
