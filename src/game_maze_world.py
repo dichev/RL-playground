@@ -16,7 +16,7 @@ class Actions:
 class MazeWorld:
 
     def __init__(self):
-        self.state = np.array([
+        self.world = np.array([
             [W, W, W, W, W, W, W, 0, 0, 0, W, W, G, 0, 0],
             [0, 0, 0, 0, 0, 0, W, 0, W, 0, W, W, 0, 0, 0],
             [W, W, W, W, W, 0, W, W, W, 0, W, W, 0, 0, 0],
@@ -26,19 +26,19 @@ class MazeWorld:
             [0, W, W, W, W, 0, W, 0, 0, 0, W, W, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, W, W, W, W, W, W, 0, 0, G],
         ])
-        self.rows, self.cols = self.state.shape
+        self.rows, self.cols = self.world.shape
         self.actions = Actions
         self.num_actions = 4
 
     def reset(self):
-        return self.state
+        return self.world
 
 
-    def get_reward(self, pos, action):
+    def get_reward(self, state, action):
         # next_pos = self.get_next_position(pos, action)
-        # s = self.state[next_pos] # not the reward of the next state, but of the transition from the current state
+        # s = self.world[next_pos] # not the reward of the next state, but of the transition from the current state
 
-        block = self.state[pos]
+        block = self.world[state]
 
         if   block == 0: return -1
         elif block == G: return +10 # todo: why become 0 in policy iter
@@ -51,20 +51,20 @@ class MazeWorld:
         out = ''
         for m in range(self.rows):
             for n in range(self.cols):
-                s = blocks_dict[self.state[m,n]]
+                s = blocks_dict[self.world[m,n]]
                 out += s + ' '
             out += '\n'
         print(out)
 
-    def bound(self, pos):
-        m, n = pos
+    def bound(self, state):
+        m, n = state
         return np.clip(m, 0, self.rows-1), np.clip(n, 0, self.cols-1)
 
-    def is_terminal(self, pos):
-        return self.state[pos] == G #or self.state[pos] == Z
+    def is_terminal(self, state):
+        return self.world[state] == G #or self.world[state] == Z
 
-    def is_explorable(self, pos):
-        return self.state[pos] != W
+    def is_explorable(self, state):
+        return self.world[state] != W
 
     def get_explorable_states(self):
         explorable_states = []
@@ -74,24 +74,23 @@ class MazeWorld:
                     explorable_states.append((m, n))
         return explorable_states
 
-    def get_next_position(self, pos, action):
-        m, n = pos
+    def get_next_state(self, state, action):
+        m, n = state
         if   action == Actions.up:    m -= 1
         elif action == Actions.down:  m += 1
         elif action == Actions.left:  n -= 1
         elif action == Actions.right: n += 1
 
-        next_pos = self.bound((m, n))
+        next_state = self.bound((m, n))
+        if self.world[next_state] == W:
+            next_state = state
 
-        if self.state[next_pos] == W:
-            return pos
-        else:
-            return next_pos
+        return next_state
 
-    def get_next_positions_all(self, pos):
+    def get_next_states_all_actions(self, state):
         return [
-            self.get_next_position(pos, Actions.up),
-            self.get_next_position(pos, Actions.down),
-            self.get_next_position(pos, Actions.left),
-            self.get_next_position(pos, Actions.right)
+            self.get_next_state(state, Actions.up),
+            self.get_next_state(state, Actions.down),
+            self.get_next_state(state, Actions.left),
+            self.get_next_state(state, Actions.right)
         ]
