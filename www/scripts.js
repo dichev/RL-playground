@@ -44,6 +44,12 @@ class Playground {
 
     }
 
+    async loop_message(command, params = {}){
+        playground.message(command, params)
+        let timer = setInterval(() => playground.message(command, params), 100)
+        window.addEventListener('mouseup', () => clearInterval(timer), { once: true })
+    }
+
     async message(command, params = {}){ // todo: move to server class
         let msg = JSON.stringify([ command, params])
         this.server.send(msg)
@@ -95,8 +101,9 @@ class Playground {
     }
 
     toggle_using_policy(using_policy = true){
-        dom.btnPolicyUpdate.disabled   = !using_policy
+        dom.btnPolicyUpdate.disabled = !using_policy
         dom.btnPolicyEvaluate.disabled = !using_policy
+        dom.btnPolicyIteration.disabled = !using_policy
         dom.btnValueIteration.disabled = using_policy
         if(dom.showPolicy.checked !== using_policy){
             dom.showPolicy.click()
@@ -139,7 +146,6 @@ let dom = {
     btnPolicyUpdate: document.getElementById('btnPolicyUpdate'),
     btnPolicyIteration: document.getElementById('btnPolicyIteration'),
     btnValueIteration: document.getElementById('btnValueIteration'),
-    btnPolicyIteration100: document.getElementById('btnPolicyIteration100'),
     cfgRandomPolicy: document.getElementById('cfgRandomPolicy'),
     cfgGreedyPolicy: document.getElementById('cfgGreedyPolicy'),
     cfgNoPolicy: document.getElementById('cfgNoPolicy'),
@@ -155,13 +161,12 @@ for (let m=0; m<rows; m++){
 playground = new Playground()
 
 dom.btnReset.addEventListener('click', () => playground.reset())
-dom.btnPolicyEvaluate.addEventListener('click', () => playground.message('policy_evaluate'))
-dom.btnPolicyUpdate.addEventListener('click', () => playground.message('policy_update'))
-dom.btnPolicyIteration.addEventListener('click', () => playground.message('policy_iteration'))
-dom.btnValueIteration.addEventListener('click', () => playground.message('value_iteration'))
-dom.btnPolicyIteration100.addEventListener('click', async () => {
-    for (let n=0; n<100;n++) await playground.message('policy_iteration')
-})
+dom.btnPolicyEvaluate.addEventListener('mousedown',  () => playground.loop_message('policy_evaluate'))
+dom.btnPolicyUpdate.addEventListener('mousedown',    () => playground.loop_message('policy_update'))
+dom.btnPolicyIteration.addEventListener('mousedown', () => playground.loop_message('policy_iteration'))
+dom.btnValueIteration.addEventListener('mousedown',  () => playground.loop_message('value_iteration'))
+
+
 
 dom.cfgGreedyPolicy.addEventListener('click', () => {
     playground.toggle_using_policy(true)
