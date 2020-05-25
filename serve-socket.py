@@ -1,7 +1,7 @@
 import json
 import asyncio
 import websockets
-from src.evaluate_grid_world import Playground
+from src.play_maze_world import Playground
 
 
 class SocketServer():

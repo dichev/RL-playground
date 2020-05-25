@@ -12,7 +12,7 @@ import socketserver
 
 from http.server import HTTPServer, BaseHTTPRequestHandler, SimpleHTTPRequestHandler
 import json
-from src.evaluate_grid_world import Playground
+from src.play_maze_world import Playground
 
 playground = Playground()
 
