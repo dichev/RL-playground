@@ -50,11 +50,6 @@ class SocketServer():
             values = self.playground.value_iteration()
             return { 'values': values.tolist() }
 
-        elif message == 'sample':
-            position = params['position']
-            values, policy = self.playground.sample(tuple(position))
-            return { 'values': values.tolist(), 'policy': policy.tolist() }
-
         elif message == 'config':
             cfg = Config(**params)
             self.playground.config(cfg)

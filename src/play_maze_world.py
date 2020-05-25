@@ -32,11 +32,6 @@ class Playground:
             self.policy_iteration()
 
 
-    def sample(self, state):
-        self.values[state] = self._calc_value(state, using_policy=True)
-        self.policy_update()
-        return self.values, self.policy_probs
-
     def policy_evaluate(self):
         V = np.zeros_like(self.values)
         # V = self.values
@@ -81,19 +76,6 @@ class Playground:
     def _get_actions_rewards(self, state):
         R = [self.env.get_reward(state, action) for action in range(self.env.num_actions)]
         return R
-
-    def _calc_value(self, state, using_policy = True):
-        assert self.env.is_explorable(state), f'Trying to calc value of wall: {state}'
-
-        GAMMA = self.cfg.gamma
-        R = [self.env.get_reward(state, action) for action in range(self.env.num_actions)]
-        next_values = self._get_q_values(state)
-
-        if using_policy:
-            v = np.sum( self.policy_probs[state] * (R + GAMMA * next_values))
-        else: # value iteration
-            v = np.max(R + GAMMA * next_values)
-        return v
 
     def _get_q_values(self, state):
         if self.env.is_terminal(state):

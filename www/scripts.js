@@ -55,20 +55,14 @@ class Playground {
         this.server.send(msg)
     }
 
-    async sample(row, col){
-        if (!this._isWall(row, col)) {
-            this.message('sample', {position: [row, col]})
-        }
-    }
-
     async reset(){
         this.message('reset')
     }
 
-    colors(pos){
+    colors(state){
         let intensity = 100 // 0..255
-        let red   = Math.round(pos < 0.5 ? intensity : ((1 - pos) * 2) * intensity)
-        let green = Math.round(pos < 0.5 ? (pos * 2) * intensity : intensity)
+        let red   = Math.round(state < 0.5 ? intensity : ((1 - state) * 2) * intensity)
+        let green = Math.round(state < 0.5 ? (state * 2) * intensity : intensity)
         let blue  = 0
         let alpha  = 1.0
         return [red, green, blue, alpha]
@@ -185,14 +179,11 @@ dom.showValues.addEventListener('click', () => document.querySelector('.world').
 dom.showPolicy.addEventListener('click', () => document.querySelector('.world').classList.toggle('show_policy'))
 dom.showColors.addEventListener('click', () => document.querySelector('.world').classList.toggle('show_colors'))
 
-for (let m=0; m<dom.world.length; m++) { // todo: a bit handlebars?
-    for (let n = 0; n < dom.world[0].length; n++) {
-        dom.world[m][n].addEventListener('click', () => playground.sample(m,n))
-        // let timer
-        // dom.world[m][n].addEventListener('mousedown', () => timer = setInterval(() => playground.sample(m,n), 1000/30))
-        // dom.world[m][n].addEventListener('mouseup', () => clearInterval(timer))
-    }
-}
+//for (let m=0; m<dom.world.length; m++) {
+//    for (let n = 0; n < dom.world[0].length; n++) {
+//        dom.world[m][n].addEventListener('click', () => playground.single(m,n))
+//    }
+//}
 
 
 
