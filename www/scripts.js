@@ -144,6 +144,8 @@ let dom = {
     cfgRandomPolicy: document.getElementById('cfgRandomPolicy'),
     cfgGreedyPolicy: document.getElementById('cfgGreedyPolicy'),
     cfgNoPolicy: document.getElementById('cfgNoPolicy'),
+    cfgGamma: document.getElementById('cfgGamma'),
+    gammaValue: document.getElementById('gammaValue'),
     showValues: document.getElementById('showValues'),
     showPolicy: document.getElementById('showPolicy'),
     showColors: document.getElementById('showColors'),
@@ -173,6 +175,12 @@ dom.cfgRandomPolicy.addEventListener('click', () => {
 })
 dom.cfgNoPolicy.addEventListener('click', () => {
     playground.toggle_using_policy(false)
+})
+dom.cfgGamma.addEventListener('input', () => {
+    dom.gammaValue.innerText = parseFloat(dom.cfgGamma.value).toFixed(2)
+})
+dom.cfgGamma.addEventListener('change', () => {
+    playground.message('config', {gamma: parseFloat(dom.cfgGamma.value) })
 })
 
 dom.showValues.addEventListener('click', () => document.querySelector('.world').classList.toggle('show_values'))
