@@ -31,9 +31,8 @@ class Playground:
             self.policy_iteration()
 
 
-
     def sample(self, pos):
-        self.values[pos] = self._calc_value(pos)
+        self.values[pos] = self._calc_value(pos, using_policy=True)
         self.policy_update()
         return self.values, self.policy_probs
 
@@ -41,7 +40,7 @@ class Playground:
         V = np.zeros_like(self.values)
         # V = self.values
         for pos in self._explorable_states():
-            V[pos] = self._calc_value(pos)
+            V[pos] = self._calc_value(pos, using_policy=True)
 
         self.values = V
         return self.values
@@ -67,28 +66,41 @@ class Playground:
                 self.render()
         return self.values, self.policy_probs
 
+    def value_iteration(self, k=1):
+        for n in range(k):
+            V = np.zeros_like(self.values)
+            for pos in self._explorable_states():
+                V[pos] = self._calc_value(pos, using_policy=False)
+            self.values = V
+        return self.values
 
-    def _calc_value(self, pos):
+    def _calc_value(self, pos, using_policy = True):
         assert self.env.is_explorable(pos), f'Trying to calc value of wall: {pos}'
+
         GAMMA = self.cfg.gamma
         R = self.env.get_reward(pos)
+        next_values = self._get_q_values(pos)
 
         if self.env.is_terminal(pos):
             v = R
-        else:
-            v = R + GAMMA * np.sum(self.policy_probs[pos] * self._get_q_values(pos))
-            # todo: this value iteration: v(s) = max(R + sum(prob(a,s') * v(s')) )
+        elif using_policy:
+            v = R + GAMMA * np.sum(self.policy_probs[pos] * next_values)
+        else: # value iteration
+            v = max(R + GAMMA * next_values)
         return v
 
-    def _get_q_values(self, pos):  # todo: must be refactored
-        assert self.env.is_explorable(pos), f'Trying to get q value of wall: {pos}'
-        env = self.env
-        return np.array([
-            self.values[env.next_pos(pos, env.actions.up)],
-            self.values[env.next_pos(pos, env.actions.down)],
-            self.values[env.next_pos(pos, env.actions.left)],
-            self.values[env.next_pos(pos, env.actions.right)]
-        ])
+    # def calc_q(self, pos, action):
+    #     next_pos = self.env.get_next_position(pos, action)
+    #     R = self.env.get_reward(pos)
+    #     GAMMA = self.cfg.gamma
+    #
+    #     q = R + GAMMA * self.values[next_pos]
+    #     return q
+
+    def _get_q_values(self, pos):
+        next_positions = self.env.get_next_positions_all(pos)
+        next_values = [self.values[next_pos] for next_pos in next_positions]
+        return np.array(next_values)
 
     def _greedy_policy(self, Q):
         max_v = max(Q)

@@ -155,6 +155,7 @@
 
     <div>
         <p>Actions:</p>
+        <button type="button" id="btnValueIteration">Value iteration</button>
         <button type="button" id="btnPolicyEvaluate">Policy evaluate</button>
         <button type="button" id="btnPolicyUpdate">Policy update</button>
         <button type="button" id="btnPolicyIteration">Policy iteration (evaluate + update)</button>
@@ -186,12 +187,16 @@
     <div>
         <p>Policy:</p>
         <div>
+            <input type="radio" id="cfgGreedyPolicy" name="greedy_policy" value="1" checked />
+            <label for="cfgGreedyPolicy">Greedy policy</label>
+        </div>
+        <div>
             <input type="radio" id="cfgRandomPolicy" name="greedy_policy" value="0"  />
             <label for="cfgRandomPolicy">Uniform random policy</label>
         </div>
         <div>
-            <input type="radio" id="cfgGreedyPolicy" name="greedy_policy" value="1" checked />
-            <label for="cfgGreedyPolicy">Greedy policy</label>
+            <input type="radio" id="cfgNoPolicy" name="greedy_policy" value="2"  />
+            <label for="cfgNoPolicy">No policy (value iteration)</label>
         </div>
     </div>
 
@@ -202,12 +207,12 @@
             <label for="showValues">Show values</label>
         </div>
         <div>
-            <input type="checkbox" id="showPolicy" checked />
-            <label for="showPolicy">Show policy</label>
-        </div>
-        <div>
             <input type="checkbox" id="showColors" checked />
             <label for="showColors">Show values colors</label>
+        </div>
+        <div>
+            <input type="checkbox" id="showPolicy" checked />
+            <label for="showPolicy">Show policy</label>
         </div>
     </div>
 

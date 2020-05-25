@@ -28,6 +28,7 @@ class MazeWorld:
         ])
         self.rows, self.cols = self.state.shape
         self.actions = Actions
+        self.num_actions = 4
 
     def reset(self):
         return self.state
@@ -66,7 +67,7 @@ class MazeWorld:
     def is_explorable(self, pos):
         return self.state[pos] != W
 
-    def next_pos(self, pos, action):
+    def get_next_position(self, pos, action):
         m, n = pos
         if   action == Actions.up:    m -= 1
         elif action == Actions.down:  m += 1
@@ -80,3 +81,10 @@ class MazeWorld:
         else:
             return next_pos
 
+    def get_next_positions_all(self, pos):
+        return [
+            self.get_next_position(pos, Actions.up),
+            self.get_next_position(pos, Actions.down),
+            self.get_next_position(pos, Actions.left),
+            self.get_next_position(pos, Actions.right)
+        ]

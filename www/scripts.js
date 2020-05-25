@@ -20,6 +20,8 @@ class Playground {
         this.rows = 0
         this.cols = 0
 
+        this.toggle_using_policy(true)
+
         this.server = new WebSocket('ws://localhost:8080')
         this.server.onmessage = async (e) => {
             let data = JSON.parse(e.data)
@@ -92,6 +94,16 @@ class Playground {
         }
     }
 
+    toggle_using_policy(using_policy = true){
+        dom.btnPolicyUpdate.disabled   = !using_policy
+        dom.btnPolicyEvaluate.disabled = !using_policy
+        dom.btnValueIteration.disabled = using_policy
+        if(dom.showPolicy.checked !== using_policy){
+            dom.showPolicy.click()
+        }
+        dom.showPolicy.disabled = !using_policy
+    }
+
     _isTerminal(m, n){
         return this.state[m][n] === G // this.state[m][n] === Z ||
     }
@@ -119,8 +131,6 @@ class Playground {
 
 }
 
-playground = new Playground()
-
 
 let dom = {
     world: [],
@@ -128,29 +138,42 @@ let dom = {
     btnPolicyEvaluate: document.getElementById('btnPolicyEvaluate'),
     btnPolicyUpdate: document.getElementById('btnPolicyUpdate'),
     btnPolicyIteration: document.getElementById('btnPolicyIteration'),
+    btnValueIteration: document.getElementById('btnValueIteration'),
     btnPolicyIteration100: document.getElementById('btnPolicyIteration100'),
     cfgRandomPolicy: document.getElementById('cfgRandomPolicy'),
     cfgGreedyPolicy: document.getElementById('cfgGreedyPolicy'),
+    cfgNoPolicy: document.getElementById('cfgNoPolicy'),
     showValues: document.getElementById('showValues'),
     showPolicy: document.getElementById('showPolicy'),
     showColors: document.getElementById('showColors'),
 }
-
 rows = document.querySelectorAll('tr').length // tmp
 for (let m=0; m<rows; m++){
     dom.world.push([...document.querySelectorAll(`[id^="${m},"]`)])
 }
 
+playground = new Playground()
+
 dom.btnReset.addEventListener('click', () => playground.reset())
 dom.btnPolicyEvaluate.addEventListener('click', () => playground.message('policy_evaluate'))
 dom.btnPolicyUpdate.addEventListener('click', () => playground.message('policy_update'))
 dom.btnPolicyIteration.addEventListener('click', () => playground.message('policy_iteration'))
+dom.btnValueIteration.addEventListener('click', () => playground.message('value_iteration'))
 dom.btnPolicyIteration100.addEventListener('click', async () => {
     for (let n=0; n<100;n++) await playground.message('policy_iteration')
 })
 
-dom.cfgRandomPolicy.addEventListener('click', () => playground.message('config', {greedy_policy: false}))
-dom.cfgGreedyPolicy.addEventListener('click', () => playground.message('config', {greedy_policy: true}))
+dom.cfgGreedyPolicy.addEventListener('click', () => {
+    playground.toggle_using_policy(true)
+    playground.message('config', {greedy_policy: true})
+})
+dom.cfgRandomPolicy.addEventListener('click', () => {
+    playground.toggle_using_policy(true)
+    playground.message('config', {greedy_policy: false})
+})
+dom.cfgNoPolicy.addEventListener('click', () => {
+    playground.toggle_using_policy(false)
+})
 
 dom.showValues.addEventListener('click', () => document.querySelector('.world').classList.toggle('show_values'))
 dom.showPolicy.addEventListener('click', () => document.querySelector('.world').classList.toggle('show_policy'))

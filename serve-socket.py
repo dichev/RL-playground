@@ -46,6 +46,10 @@ class SocketServer():
             values, policy = self.playground.policy_iteration()
             return { 'values': values.tolist(), 'policy': policy.tolist() }
 
+        elif message == 'value_iteration':
+            values = self.playground.value_iteration()
+            return { 'values': values.tolist() }
+
         elif message == 'sample':
             position = params['position']
             values, policy = self.playground.sample(tuple(position))
