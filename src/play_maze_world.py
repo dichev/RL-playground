@@ -70,11 +70,14 @@ class Playground:
 
     def _calc_value(self, pos):
         assert self.env.is_explorable(pos), f'Trying to calc value of wall: {pos}'
-
         GAMMA = self.cfg.gamma
         R = self.env.get_reward(pos)
-        v = R + GAMMA * np.sum(self.policy_probs[pos] * self._get_q_values(pos))
-        # todo: this value iteration: v(s) = max(R + sum(prob(a,s') * v(s')) )
+
+        if self.env.is_terminal(pos):
+            v = R
+        else:
+            v = R + GAMMA * np.sum(self.policy_probs[pos] * self._get_q_values(pos))
+            # todo: this value iteration: v(s) = max(R + sum(prob(a,s') * v(s')) )
         return v
 
     def _get_q_values(self, pos):  # todo: must be refactored
