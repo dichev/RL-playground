@@ -14,7 +14,7 @@ let dictClasses = {
 class Playground {
 
     constructor() {
-        this.state = []
+        this.world = []
         this.values = []
         this.policy = []
         this.rows = 0
@@ -25,10 +25,10 @@ class Playground {
         this.server = new WebSocket('ws://localhost:8080')
         this.server.onmessage = async (e) => {
             let data = JSON.parse(e.data)
-            if (data.state){
-                this.state = data.state
-                this.rows = this.state.length
-                this.cols = this.state[0].length
+            if (data.world){
+                this.world = data.world
+                this.rows = this.world.length
+                this.cols = this.world[0].length
             }
             if (data.values){
                 this.values = data.values
@@ -89,7 +89,7 @@ class Playground {
                 dom.world[m][n].querySelector('.value').innerText = value.toFixed(4) + '..'
                 dom.world[m][n].querySelector('.color').style.backgroundColor = `rgba(${color.join(',')})`
                 dom.world[m][n].querySelector('.policy').innerText = arrows
-                dom.world[m][n].className = dictClasses[this.state[m][n]]
+                dom.world[m][n].className = dictClasses[this.world[m][n]]
             }
         }
     }
@@ -107,10 +107,10 @@ class Playground {
     }
 
     _isTerminal(m, n){
-        return this.state[m][n] === G // this.state[m][n] === Z ||
+        return this.world[m][n] === G // this.world[m][n] === Z ||
     }
     _isWall(m, n){
-        return this.state[m][n] === W
+        return this.world[m][n] === W
     }
 
     _normalize(value, min, max) {

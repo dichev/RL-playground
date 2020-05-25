@@ -4,7 +4,7 @@ from game_maze_world import MazeWorld
 
 @dataclass
 class Config:
-    gamma         :float = 0.9
+    gamma         :float = 1.0
     greedy_policy :bool  = True # otherwise will be uniform random
 
 

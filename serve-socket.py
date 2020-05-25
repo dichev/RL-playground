@@ -30,8 +30,8 @@ class SocketServer():
 
     def on_message(self, message, params):
         if message == 'reset':
-            values, policy, state = self.playground.reset()
-            return { 'values': values.tolist(), 'policy': policy.tolist(), 'state': state.tolist() }
+            values, policy, world = self.playground.reset()
+            return { 'values': values.tolist(), 'policy': policy.tolist(), 'world': world.tolist() }
             pass
 
         elif message == 'policy_evaluate':
