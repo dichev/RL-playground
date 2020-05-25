@@ -15,6 +15,7 @@ class Playground:
         self.rows, self.cols = states_all.shape
         self.values = np.zeros((self.rows, self.cols))
         self.policy_probs = np.zeros((self.rows, self.cols, 4))
+        self.policy_probs += [0.25, 0.25, 0.25, 0.25]
 
         return self.values, self.policy_probs, states_all
 
