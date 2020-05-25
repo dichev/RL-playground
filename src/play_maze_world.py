@@ -1,23 +1,36 @@
 import numpy as np
+from dataclasses import dataclass
 from game_maze_world import MazeWorld
 
+@dataclass
+class Config:
+    gamma         :float = 1.0
+    greedy_policy :bool  = True # otherwise will be uniform random
 
-GAMMA = 1 # 0.9
+
 
 class Playground:
 
     def __init__(self):
         self.env = MazeWorld()
+        self.cfg = Config()
         self.reset()
 
     def reset(self):
         states_all = self.env.reset()
         self.rows, self.cols = states_all.shape
         self.values = np.zeros((self.rows, self.cols))
-        self.policy_probs = np.zeros((self.rows, self.cols, 4))
-        self.policy_probs += [0.25, 0.25, 0.25, 0.25]
+        self.policy_probs = np.full((self.rows, self.cols, 4), 0.25)
 
         return self.values, self.policy_probs, states_all
+
+    def config(self, cfg:Config):
+        prev = self.cfg
+        self.cfg = cfg
+        if cfg.greedy_policy != prev.greedy_policy:
+            self.policy_iteration()
+
+
 
     def sample(self, pos):
         self.values[pos] = self._calc_value(pos)
@@ -38,8 +51,11 @@ class Playground:
             if self.env.is_terminal(pos):
                 self.policy_probs[pos] = [0,0,0,0]
             else:
-                Q = self._get_q_values(pos)
-                self.policy_probs[pos] = self._greedy_policy(Q)
+                if self.cfg.greedy_policy:
+                    Q = self._get_q_values(pos)
+                    self.policy_probs[pos] = self._greedy_policy(Q)
+                else:
+                    self.policy_probs[pos] = [0.25,0.25,0.25,0.25]
         return self.policy_probs
 
     def policy_iteration(self, k=1, render=False):
@@ -55,9 +71,9 @@ class Playground:
     def _calc_value(self, pos):
         assert self.env.is_explorable(pos), f'Trying to calc value of wall: {pos}'
 
+        GAMMA = self.cfg.gamma
         R = self.env.get_reward(pos)
-        v = R + GAMMA * np.sum(self.policy_probs[pos] * self._get_q_values(pos)) # cfg.greedy_policy
-        # v = R + GAMMA * np.sum(0.25 * self._get_q_values(pos)) # todo: cfg.uniform_random_policy
+        v = R + GAMMA * np.sum(self.policy_probs[pos] * self._get_q_values(pos))
         # todo: this value iteration: v(s) = max(R + sum(prob(a,s') * v(s')) )
         return v
 

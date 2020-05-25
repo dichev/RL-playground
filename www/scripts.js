@@ -129,6 +129,8 @@ let dom = {
     btnPolicyUpdate: document.getElementById('btnPolicyUpdate'),
     btnPolicyIteration: document.getElementById('btnPolicyIteration'),
     btnPolicyIteration100: document.getElementById('btnPolicyIteration100'),
+    cfgRandomPolicy: document.getElementById('cfgRandomPolicy'),
+    cfgGreedyPolicy: document.getElementById('cfgGreedyPolicy'),
     showValues: document.getElementById('showValues'),
     showPolicy: document.getElementById('showPolicy'),
     showColors: document.getElementById('showColors'),
@@ -146,6 +148,9 @@ dom.btnPolicyIteration.addEventListener('click', () => playground.message('polic
 dom.btnPolicyIteration100.addEventListener('click', async () => {
     for (let n=0; n<100;n++) await playground.message('policy_iteration')
 })
+
+dom.cfgRandomPolicy.addEventListener('click', () => playground.message('config', {greedy_policy: false}))
+dom.cfgGreedyPolicy.addEventListener('click', () => playground.message('config', {greedy_policy: true}))
 
 dom.showValues.addEventListener('click', () => document.querySelector('.world').classList.toggle('show_values'))
 dom.showPolicy.addEventListener('click', () => document.querySelector('.world').classList.toggle('show_policy'))

@@ -1,7 +1,7 @@
 import json
 import asyncio
 import websockets
-from src.play_maze_world import Playground
+from src.play_maze_world import Playground, Config
 
 
 class SocketServer():
@@ -50,6 +50,11 @@ class SocketServer():
             position = params['position']
             values, policy = self.playground.sample(tuple(position))
             return { 'values': values.tolist(), 'policy': policy.tolist() }
+
+        elif message == 'config':
+            cfg = Config(**params)
+            self.playground.config(cfg)
+            return { 'values': self.playground.values.tolist(), 'policy': self.playground.policy_probs.tolist() }
 
         else:
             return { 'error': 'There is no such request: ' + message}
