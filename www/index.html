@@ -166,20 +166,20 @@
     <div>
         <p>Dynamic programming:</p>
         <div>
-            <input type="radio" id="a" name="drone" value="a" checked />
-            <label for="a">Synchronous backup (update values of all states together using cache of previous values)</label>
+            <input type="radio" id="cfgSyncBackupDP" name="dp_mode" value="dp_sync_backup" checked />
+            <label for="cfgSyncBackupDP">Synchronous backup (update values of all states together using cache of previous values)</label>
         </div>
         <div>
-            <input type="radio" id="b" name="drone" value="b" />
-            <label for="b">In-place backup (update values of all states one by one in any order)</label>
+            <input type="radio" id="cfgInplaceBackupDP" name="dp_mode" value="dp_inplace_backup" />
+            <label for="cfgInplaceBackupDP">Async in-place backup (update values of all states one by one in any order)</label>
         </div>
         <div>
-            <input type="radio" id="c" name="drone" value="c" />
-            <label for="c">Asynchronous backup (update values of all states one by one in any order)</label>
+            <input type="radio" id="cfgPrioritizedDP" name="dp_mode" value="dp_prioritized" disabled />
+            <label for="cfgPrioritizedDP">Prioritized sweeping (update values of the state with largest delta value and all affected states)</label>
         </div>
         <div>
-            <input type="radio" id="d" name="drone" value="d" />
-            <label for="d">Random update (update random value)</label>
+            <input type="radio" id="cfgRealTimeDP" name="dp_mode" value="dp_real_time" disabled />
+            <label for="cfgRealTimeDP">Real-time (update only states the agent visits)</label>
         </div>
     </div>
 

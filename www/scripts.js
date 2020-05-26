@@ -141,6 +141,10 @@ let dom = {
     btnPolicyUpdate: document.getElementById('btnPolicyUpdate'),
     btnPolicyIteration: document.getElementById('btnPolicyIteration'),
     btnValueIteration: document.getElementById('btnValueIteration'),
+    cfgSyncBackupDP: document.getElementById('cfgSyncBackupDP'),
+    cfgInplaceBackupDP: document.getElementById('cfgInplaceBackupDP'),
+    cfgPrioritizedDP: document.getElementById('cfgPrioritizedDP'),
+    cfgRealTimeDP: document.getElementById('cfgRealTimeDP'),
     cfgRandomPolicy: document.getElementById('cfgRandomPolicy'),
     cfgGreedyPolicy: document.getElementById('cfgGreedyPolicy'),
     cfgNoPolicy: document.getElementById('cfgNoPolicy'),
@@ -181,6 +185,18 @@ dom.cfgGamma.addEventListener('input', () => {
 })
 dom.cfgGamma.addEventListener('change', () => {
     playground.message('config', {gamma: parseFloat(dom.cfgGamma.value) })
+})
+dom.cfgSyncBackupDP.addEventListener('click', () => {
+    playground.message('config', { mode: 'dp_sync_backup' })
+})
+dom.cfgInplaceBackupDP.addEventListener('click', () => {
+    playground.message('config', { mode: 'dp_inplace_backup' })
+})
+dom.cfgPrioritizedDP.addEventListener('click', () => {
+    playground.message('config', { mode: 'dp_prioritized' })
+})
+dom.cfgRealTimeDP.addEventListener('click', () => {
+    playground.message('config', { mode: 'dp_real_time' })
 })
 
 dom.showValues.addEventListener('click', () => document.querySelector('.world').classList.toggle('show_values'))

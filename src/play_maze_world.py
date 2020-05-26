@@ -6,6 +6,8 @@ from game_maze_world import MazeWorld
 class Config:
     gamma         :float = 1.0
     greedy_policy :bool  = True # otherwise will be uniform random
+    modes                = ['dp_sync_backup', 'dp_inplace_backup', 'dp_prioritized', 'dp_real_time']
+    mode          :str   = 'dp_sync_backup'
 
 
 
@@ -26,6 +28,8 @@ class Playground:
         return self.values, self.policy_probs, world
 
     def config(self, cfg:Config):
+        if cfg.mode not in cfg.modes:
+            raise Exception(f'There is no such mode: {cfg.mode}')
         prev = self.cfg
         self.cfg = cfg
         if cfg.greedy_policy != prev.greedy_policy:
@@ -33,15 +37,19 @@ class Playground:
 
 
     def policy_evaluate(self):
-        V = np.zeros_like(self.values)
-        # V = self.values
+        if self.cfg.mode == 'dp_sync_backup':
+            V = np.zeros_like(self.values) if self.cfg.mode == 'dp_sync_backup' else self.va
+        else:
+            V = self.values
+
         for state in self.explorable_states:
             R = self._get_actions_rewards(state)
             Vn = self._get_next_states_values(state)
             GAMMA = self.cfg.gamma
             V[state] = np.sum(self.policy_probs[state] * (R + GAMMA * Vn))
 
-        self.values = V
+        if self.cfg.mode == 'dp_sync_backup':
+            self.values = V
         return self.values
 
     def policy_update(self):
@@ -64,13 +72,19 @@ class Playground:
 
     def value_iteration(self, k=1):
         for n in range(k):
-            V = np.zeros_like(self.values)
+            if self.cfg.mode == 'dp_sync_backup':
+                V = np.zeros_like(self.values)
+            else:
+                V = self.values
+
             for state in self.explorable_states:
                 R = self._get_actions_rewards(state)
                 Vn = self._get_next_states_values(state)
                 GAMMA = self.cfg.gamma
                 V[state] = np.max(R + GAMMA * Vn)
-            self.values = V
+
+            if self.cfg.mode == 'dp_sync_backup':
+                self.values = V
         return self.values
 
     def _get_actions_rewards(self, state):
