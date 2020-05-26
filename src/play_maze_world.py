@@ -24,6 +24,7 @@ class Playground:
         self.values = np.zeros((self.rows, self.cols))
         self.policy_probs = np.full((self.rows, self.cols, 4), 0.25)
         self.explorable_states = self.env.get_explorable_states()
+        self.priority = np.zeros((self.rows, self.cols))
 
         return self.values, self.policy_probs, world
 
@@ -35,18 +36,35 @@ class Playground:
         if cfg.greedy_policy != prev.greedy_policy:
             self.policy_iteration()
 
+    def get_priority_states(self):
+        max_delta = -1
+        chosen_state = None
+        for state in self.explorable_states:
+            if self.priority[state] > max_delta:
+                max_delta = self.priority[state]
+                chosen_state = state
+
+        states = self.env.get_predecessor_states(chosen_state)
+        return states
 
     def policy_evaluate(self):
+        states = self.explorable_states
+
         if self.cfg.mode == 'dp_sync_backup':
             V = np.zeros_like(self.values) if self.cfg.mode == 'dp_sync_backup' else self.va
         else:
             V = self.values
+            if self.cfg.mode == 'dp_prioritized':
+                states = self.get_priority_states()
 
-        for state in self.explorable_states:
+        for state in states:
             R = self._get_actions_rewards(state)
             Vn = self._get_next_states_values(state)
             GAMMA = self.cfg.gamma
-            V[state] = np.sum(self.policy_probs[state] * (R + GAMMA * Vn))
+            v = np.sum(self.policy_probs[state] * (R + GAMMA * Vn))
+            delta = np.abs(self.values[state] - v)
+            self.priority[state] = delta
+            V[state] = v
 
         if self.cfg.mode == 'dp_sync_backup':
             self.values = V

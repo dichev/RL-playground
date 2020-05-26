@@ -94,3 +94,22 @@ class MazeWorld:
             self.get_next_state(state, Actions.left),
             self.get_next_state(state, Actions.right)
         ]
+
+    def get_predecessor_states(self, state):
+        collected = [state]
+        next_states = [state]
+
+        while next_states:
+            states = next_states
+            next_states = []
+            for state in states:
+                found = list(set([s for s in self.get_next_states_all_actions(state) if s not in collected]))
+                if found:
+                    collected.extend(found)
+                    next_states.extend(found)
+
+            if not next_states:
+                break
+
+        return collected
+
