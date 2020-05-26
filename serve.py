@@ -1,23 +1,22 @@
 import json
 import asyncio
 import websockets
+import threading
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 from src.play_maze_world import Playground, Config
 
-
-class SocketServer():
+class SocketServer:
 
     def __init__(self):
         self.connected = set()
         self.playground = Playground()
 
-    def serve(self, host = 'localhost', port = 8080):
-        sockets = websockets.serve(self.on_connected, host, port)
-        print(f'Socket server listen on ws://{host}:{port}')
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(sockets)
-        loop.run_forever()
+    async def serve(self, host = 'localhost', port = 8080):
+        async with websockets.serve(self.on_connected, host, port):
+            print(f'Socket server listen on ws://{host}:{port}')
+            await asyncio.Future()
 
-    async def on_connected(self, websocket, path):
+    async def on_connected(self, websocket, path=None):
         print(websocket, path)
         self.connected.add(websocket)
 
@@ -58,14 +57,18 @@ class SocketServer():
         else:
             return { 'error': 'There is no such request: ' + message}
 
+def serve_static():
+    httpd = HTTPServer(('localhost', 8000), SimpleHTTPRequestHandler)
+    print('HTTP server on http://localhost:8000/www/')
+    httpd.serve_forever()
 
+if __name__ == "__main__":
+    # Serve static files on a separate thread
+    http_thread = threading.Thread(target=serve_static)
+    http_thread.daemon = True
+    http_thread.start()
 
-# async def serve_static():
-#     from http.server import HTTPServer, SimpleHTTPRequestHandler
-#     httpd = HTTPServer(('localhost', 8000), SimpleHTTPRequestHandler)
-#     print('HTTP server on http://localhost:8000')
-#     httpd.serve_forever()
-# asyncio.get_event_loop().create_task(serve_static())
-
-SocketServer().serve()
+    # Serve python
+    server = SocketServer()
+    asyncio.run(server.serve())
 
