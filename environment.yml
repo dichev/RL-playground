@@ -1,0 +1,7 @@
+name: web
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - numpy
+  - websockets
